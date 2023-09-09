@@ -8,8 +8,8 @@ function App() {
   return(
     <main>
       <Bar />
-      {/* <Visualizer /> */}
-      <Detector />
+      <Visualizer />
+      {/* <Detector /> */}
     </main>
   );
 }

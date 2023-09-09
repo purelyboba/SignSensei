@@ -13,9 +13,12 @@ function Visualizer() {
   const runHandpose = async () => {
     const net = await handpose.load()
     console.log('Handpose model loaded.')
+    const model = await tf.loadGraphModel('model.json');
+    console.log('Predictor model loaded.')
     // loop and detect hands
     setInterval(() => {
-      detect(net)
+      const coords = detect(net);
+      console.log(coords)
     }, 1)
   };
 
@@ -38,8 +41,15 @@ function Visualizer() {
       const hand = await net.estimateHands(video);
       console.log(hand);
 
+      const model = await tf.loadGraphModel('model.json');
+      console.log("model loaded")
+      const prediction = model.predict(hand);
+      console.log(prediction);
+
       const ctx = canvasRef.current.getContext("2d");
       drawHand(hand, ctx);
+
+      return hand;
     }
   }
 
