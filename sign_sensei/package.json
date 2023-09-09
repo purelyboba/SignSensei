@@ -3,6 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@fontsource/roboto": "^5.0.8",
+    "@mui/icons-material": "^5.14.8",
+    "@mui/material": "^5.14.8",
+    "@mui/styled-engine-sc": "^5.14.8",
+    "@react-oauth/google": "^0.11.1",
     "@tensorflow-models/handpose": "^0.1.0",
     "@tensorflow/tfjs": "^4.10.0",
     "@testing-library/jest-dom": "^5.17.0",
@@ -12,6 +19,7 @@
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
     "react-webcam": "^7.1.1",
+    "styled-components": "^5.3.11",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

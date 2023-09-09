@@ -1,10 +1,16 @@
 import React, { useRef } from 'react';
 
-import Detector from "./detector";
+import Bar from "./components/bar"
+import Visualizer from "./components/visualizer";
+import Detector from "./components/detector";
 
 function App() {
   return(
-    <Detector />
+    <main>
+      <Bar />
+      {/* <Visualizer /> */}
+      <Detector />
+    </main>
   );
 }
 
