@@ -59,7 +59,7 @@ class VideoCamera(object):
                     print(label)
 
 
-                    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+#                    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
                     ret, jpeg = cv2.imencode('.jpg', image)
                     print(type(jpeg.tobytes()))
