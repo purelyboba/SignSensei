@@ -4,7 +4,7 @@ function App() {
   return(
     <main>
 	  <h1>hi</h1>
-	  <img src="bruh.jpg" alt="video" />
+	  <img src="http://localhost:5000/video_feed" alt="video" />
     </main>
   );
 }

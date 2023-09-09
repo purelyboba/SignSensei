@@ -89,8 +89,8 @@ function Visualizer() {
           right: 0,
           textAlign: "center",
           zindex: 9,
-          width: 640,
-          height: 480
+          width: 861,
+          height: 575
         }} 
       />
       <canvas 
@@ -103,8 +103,8 @@ function Visualizer() {
           right: 0,
           textAlign: "center",
           zindex: 9,
-          width: 640,
-          height: 480
+          width: 861,
+          height: 575
         }} 
       />
     </div>
