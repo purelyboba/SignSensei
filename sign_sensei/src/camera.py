@@ -9,8 +9,12 @@ class VideoCamera(object):
         self.mp_drawing = mp.solutions.drawing_utils
         self.mp_hands = mp.solutions.hands
         self.alphabets = list("ABCDEFGHIKLMNOPQRSTUVWXY")
+        self.var = ""
 
         self.model = tf.keras.models.load_model("newmodel.keras")
+
+    def get_label(self):
+        return "hi"
 
     def process_video(self):
         with self.mp_hands.Hands(min_detection_confidence=0.8, min_tracking_confidence=0.5) as hands:
@@ -33,7 +37,6 @@ class VideoCamera(object):
                 # RGB 2 BGR
                 image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
                 # Detections
-                print(results)
 
                 # Rendering results
                 landmark_vertices_xyz = []
@@ -54,11 +57,11 @@ class VideoCamera(object):
 
                     temp_dataset.append(tuple(landmark_vertices_xyz))
                     ll = np.array(temp_dataset)
-                    label_idx = np.argmax(self.model.predict(ll.reshape((1, -1))))
+                    label_idx = np.argmax(self.model.predict(ll.reshape((1, -1)), verbose="0"))
                     label = self.alphabets[label_idx]
-                    print(label)
+                    self.var = label
 
-                cv2.imshow('Hand Tracking', image)
+                return image
 
                 if cv2.waitKey(10) & 0xFF == ord('q'):
                     break
