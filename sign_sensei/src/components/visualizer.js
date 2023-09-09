@@ -10,7 +10,14 @@ function Visualizer() {
   const webcamRef = useRef(null);
   const canvasRef = useRef(null);
 
-  const [coords, setCoords] = useState(new Array(63));
+  const [coords, setCoords] = useState(null);
+
+  function normalizeArray(arr) {
+    const max = Math.max(...arr);
+    const min = Math.min(...arr);
+
+    return arr.map(value => 2 * (value - min) / (max - min) - 1);
+  }
 
   const runHandpose = async () => {
     const net = await handpose.load()
@@ -20,13 +27,15 @@ function Visualizer() {
     // loop and detect hands
     setInterval(() => {
       detect(net);
-      console.log(coords);
-      const tensor = model.predict(tf.tensor(coords, [1, 63]));
-      tensor.data().then(data => {
-        const predictedClass = data.indexOf(Math.max(...data));
-        console.log(`Predicted class: ${predictedClass}`)
-      })
-    }, 1)
+      // console.log(coords);
+      if (coords !== null) {
+        const tensor = model.predict(tf.tensor(coords, [1, 63]));
+        tensor.data().then(data => {
+          const predictedClass = data.indexOf(Math.max(...data));
+          console.log(`Predicted class: ${predictedClass}`)
+        })
+      }
+    }, 50)
   };
 
   const detect = async (net) => {
@@ -51,15 +60,17 @@ function Visualizer() {
       const ctx = canvasRef.current.getContext("2d");
       drawHand(hand, ctx);
 
-      if (hand["length"] !== 0) {
+      if (hand["length"] != 0) {
         const value = hand[0]["landmarks"];
-        let revisedValue = new Array(63);
+        let revisedValue = []
         for (let i = 0; i < 21; i++) {
           revisedValue.push(value[i][0]);
           revisedValue.push(value[i][1]);
           revisedValue.push(value[i][2]);
         }
-        setCoords([...revisedValue]);
+        revisedValue = revisedValue;
+        revisedValue = normalizeArray(revisedValue);
+        setCoords(revisedValue);
       }
     }
   }
