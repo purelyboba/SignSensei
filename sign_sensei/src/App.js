@@ -1,15 +1,10 @@
 import React, { useRef } from 'react';
 
-import Bar from "./components/bar"
-import Visualizer from "./components/visualizer";
-import Detector from "./components/detector";
-
 function App() {
   return(
     <main>
-      <Bar />
-      <Visualizer />
-      {/* <Detector /> */}
+	  <h1>hi</h1>
+	  <img src="bruh.jpg" alt="video" />
     </main>
   );
 }
