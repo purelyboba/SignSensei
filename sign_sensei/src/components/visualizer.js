@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef,useState } from 'react';
 import * as tf from '@tensorflow/tfjs';
 import * as handpose from '@tensorflow-models/handpose';
 import Webcam from "react-webcam";
@@ -10,15 +10,22 @@ function Visualizer() {
   const webcamRef = useRef(null);
   const canvasRef = useRef(null);
 
+  const [coords, setCoords] = useState(new Array(63));
+
   const runHandpose = async () => {
     const net = await handpose.load()
     console.log('Handpose model loaded.')
     const model = await tf.loadGraphModel('model.json');
-    console.log('Predictor model loaded.')
+    console.log('Predictor model loaded.');
     // loop and detect hands
     setInterval(() => {
-      const coords = detect(net);
-      console.log(coords)
+      detect(net);
+      console.log(coords);
+      const tensor = model.predict(tf.tensor(coords, [1, 63]));
+      tensor.data().then(data => {
+        const predictedClass = data.indexOf(Math.max(...data));
+        console.log(`Predicted class: ${predictedClass}`)
+      })
     }, 1)
   };
 
@@ -39,17 +46,21 @@ function Visualizer() {
       canvasRef.current.height = videoHeight;
 
       const hand = await net.estimateHands(video);
-      console.log(hand);
-
-      const model = await tf.loadGraphModel('model.json');
-      console.log("model loaded")
-      const prediction = model.predict(hand);
-      console.log(prediction);
+      // console.log(hand);
 
       const ctx = canvasRef.current.getContext("2d");
       drawHand(hand, ctx);
 
-      return hand;
+      if (hand["length"] !== 0) {
+        const value = hand[0]["landmarks"];
+        let revisedValue = new Array(63);
+        for (let i = 0; i < 21; i++) {
+          revisedValue.push(value[i][0]);
+          revisedValue.push(value[i][1]);
+          revisedValue.push(value[i][2]);
+        }
+        setCoords([...revisedValue]);
+      }
     }
   }
 
