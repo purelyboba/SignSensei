@@ -4,11 +4,18 @@ import numpy as np
 import pandas as pd
 import os
 import cv2
+import tensorflow as tf
+import time
 
 mp_drawing = mp.solutions.drawing_utils
 mp_hands = mp.solutions.hands
+alphabets = list("ABCDEFGHIKLMNOPQRSTUVWXY")
+
+model = tf.keras.models.load_model("newmodel.keras")
 
 cap = cv2.VideoCapture(0)
+
+
 
 with mp_hands.Hands(min_detection_confidence=0.8, min_tracking_confidence=0.5) as hands: 
     while cap.isOpened():
@@ -29,20 +36,30 @@ with mp_hands.Hands(min_detection_confidence=0.8, min_tracking_confidence=0.5) a
         print(results)
         
         # Rendering results
+        landmark_vertices_xyz = []
+        temp_dataset = []
         if results.multi_hand_landmarks:
             for num, hand in enumerate(results.multi_hand_landmarks):
                 mp_drawing.draw_landmarks(image, hand, mp_hands.HAND_CONNECTIONS, 
                                         mp_drawing.DrawingSpec(color=(121, 22, 76), thickness=2, circle_radius=4),
                                         mp_drawing.DrawingSpec(color=(250, 44, 250), thickness=2, circle_radius=2),
                                          )
+#            print(results.multi_hand_landmarks)
+            for l in results.multi_hand_landmarks[0].landmark:
+                landmark_vertices_xyz.append(l.x)
+                landmark_vertices_xyz.append(l.y)
+                landmark_vertices_xyz.append(l.z)
+
+            temp_dataset.append(tuple(landmark_vertices_xyz))
+            ll = np.array(temp_dataset)
+            label_idx = np.argmax(model.predict(ll.reshape((1,-1))))
+            label = alphabets[label_idx]
+            print(label)
+
         cv2.imshow('Hand Tracking', image)
 
         if cv2.waitKey(10) & 0xFF == ord('q'):
             break
-
-cap.release()
-cv2.destroyAllWindows()
-
 
 
 cap.release()
