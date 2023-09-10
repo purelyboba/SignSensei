@@ -8,6 +8,8 @@ In an increasingly interconnected world, one of the most important skills we can
 
 SignSensei is a web application that gamifies the process of learning sign language. Using the webcam on your laptop (or front-facing camera on your phone), our app can detect the sign you are putting up with your hand, and tell you whether it is correct. You will be able to see yourself on the screen, as well as a lattice representation of your hand. This makes it easy to monitor your hands to make sure you are getting the signs right. The demo lesson (see video) teaches you the ASL alphabet. 
 
+https://github.com/R1tzG/SignSensei/assets/86858242/40b4d428-f614-4800-8151-0d3d9c74f5af
+
 ## How we built it
 
 Our sign language detection system is built in two parts. First we collect hand landmark coordinates using the Mediapipe machine learning library. We then pass the extracted coordinates through a custom fully connected neural network that we trained on a dataset of ASL signs. This approach allows us to detect signs from the webcam feed with high precision and accuracy (97% test accuracy on the custom model).
