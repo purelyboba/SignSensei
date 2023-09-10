@@ -19,7 +19,7 @@ The sign detection system outlined above forms the backbone of our app. We also 
 
 ## Challenges we ran into
 
-We were significantly challenged with developing an accurate detection model. Our first few attempts fell short in accuracy. We were eventually able to train a fast and accurate model for the task Our final model is also very simple, made up primarily of Dense layers. 
+We were significantly challenged with developing an accurate detection model. Our first few attempts fell short in accuracy. We were eventually able to train a fast and accurate model for the task. Our final model is very simple but performant, made up primarily of Dense layers. 
 Another challenge we ran into was developing the user interface. At first, we looked at using React, but found it difficult to integrate Tensorflow and OpenCV seamlessly. We decided to switch gears and develop our front-end with Streamlit, leveraging the power of the Python programming language. 
 
 ## Accomplishments that we're proud of
