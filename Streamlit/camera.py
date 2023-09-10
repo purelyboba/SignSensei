@@ -9,6 +9,7 @@ import tensorflow as tf
 import time
 import streamlit as st
 import streamlit.components.v1 as components
+from PIL import Image
 
 cap = cv2.VideoCapture(0)
 mp_drawing = mp.solutions.drawing_utils
@@ -17,14 +18,20 @@ alphabets = list("ABCDEFGHIKLMNOPQRSTUVWXY")
 
 model = tf.keras.models.load_model("newmodel.keras")
 st.title("Lesson 1 - The Alphabet")
+correct_count = 0
 frame_placeholder = st.empty()
-stop_button_pressed = st.button("Stop")
+stop_button_col, skip_button_col, _, _, _, _, _, _ = st.columns(8)
+
+stop_button_pressed = stop_button_col.button("Stop")
+skip_button_pressed = skip_button_col.button("Skip")
+
 
 
 data = st.markdown('Loading...')
 currentLetter = st.markdown('')
 ct = st.markdown('')
 tt = st.markdown('')
+st.divider()
 
 components.html(
     """
@@ -42,15 +49,33 @@ components.html(
 
 st.session_state.correct_letter = None
 correct_letter_start_time = None
+image_placeholder = st.empty()
+asl_images = {letter: f"images/{letter}.png" for letter in alphabets}
 
-with mp_hands.Hands(min_detection_confidence=0.8, min_tracking_confidence=0.5) as hands: 
+st.sidebar.title("Signs Correct")
+dd = st.sidebar.markdown('Number of Signs correct: 0')
+
+
+with mp_hands.Hands(min_detection_confidence=0.8, min_tracking_confidence=0.5) as hands:
     while cap.isOpened() and not stop_button_pressed:
         if (st.session_state.correct_letter is None) or (st.session_state.correct_letter == "CORRECT"):
             # Generate a random letter if the correct letter has not been signed
             st.session_state.correct_letter = random.choice(alphabets)
             correct_letter_start_time = None  # Reset the start time for the next letter
-
             ct.text('')
+            letter_image_path = asl_images[st.session_state.correct_letter]
+            letter_image = Image.open(letter_image_path)
+            image_placeholder.image(letter_image, channels="RGB", width=275)
+        
+        if skip_button_pressed:
+            # Generate a random letter if the correct letter has not been signed
+            st.session_state.correct_letter = random.choice(alphabets)
+            correct_letter_start_time = None  # Reset the start time for the next letter
+            ct.text('')
+            letter_image_path = asl_images[st.session_state.correct_letter]
+            letter_image = Image.open(letter_image_path)
+            image_placeholder.image(letter_image, channels="RGB", width=275)
+            skip_button_pressed = False
 
 
         ret, frame = cap.read()
@@ -99,10 +124,12 @@ with mp_hands.Hands(min_detection_confidence=0.8, min_tracking_confidence=0.5) a
 
                 tt.markdown(str(time.time() - correct_letter_start_time)[0:4])
                 
-                if time.time() - correct_letter_start_time >= 2.5:
+                if time.time() - correct_letter_start_time >= 1.5:
                     st.session_state.correct_letter = "CORRECT"
                     ct.markdown('<span style="color:green;font-size:100px;">Correct! 😎</span>', unsafe_allow_html=True)
-                    time.sleep(1)  # Add a small delay to display the "Correct!" message
+                    correct_count += 1
+                    dd.markdown(f"Number of Signs Correct: {correct_count}")
+                    time.sleep(1.2)  # Add a small delay to display the "Correct!" message
                     st.session_state.correct_letter = None  # Reset the correct letter
 
             data.markdown("Current signed letter: " + label)
@@ -110,8 +137,9 @@ with mp_hands.Hands(min_detection_confidence=0.8, min_tracking_confidence=0.5) a
             if st.session_state.correct_letter is None:
                 continue
             if label != st.session_state.correct_letter:
-                currentLetter.markdown(f'<span style="color:orange;font-size:24px;">Your goal is to sign the letter: <span style="font-weight:900;">{st.session_state.correct_letter}</span>. <br />Once you sign the letter, hold your sign for 2.5 seconds to really start learning!</span>', unsafe_allow_html=True)
+                currentLetter.markdown(f'<span style="color:orange;font-size:24px;">Your goal is to sign the letter: <span style="font-weight:900;">{st.session_state.correct_letter}</span>. <br />Once you sign the letter, hold your sign for 1.5 seconds to really start learning!</span>', unsafe_allow_html=True)
                 correct_letter_start_time = None
+            
 
         if cv2.waitKey(10) & 0xFF == ord('q'):
             break
