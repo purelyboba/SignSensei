@@ -2,6 +2,8 @@
 
 **_Learn sign language interactively with the help of AI._**
 
+**NOTE: Currently working implementation is `./Streamlit/camera.py`**
+
 ## Inspiration
 
 In an increasingly interconnected world, one of the most important skills we can acquire is the ability to communicate effectively with people from diverse backgrounds and abilities. American Sign Language (ASL) is a language used by millions of deaf and hard-of-hearing individuals around the world. However, there are still significant barriers preventing many from learning and using ASL. Our project, SignSensei, aims to break down those barriers, making it easier and faster for anyone to learn ASL, as well as other sign languages. We hope to promote inclusivity through communication for all.
